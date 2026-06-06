@@ -59,6 +59,24 @@ export const verificationTokens = pgTable(
   (vt) => [primaryKey({ columns: [vt.identifier, vt.token] })]
 );
 
+export const magicLinkRateLimits = pgTable(
+  "magic_link_rate_limits",
+  {
+    identifier: text("identifier").primaryKey(),
+    attemptCount: integer("attempt_count").notNull().default(0),
+    windowStart: timestamp("window_start", {
+      withTimezone: true,
+      mode: "string",
+    }).notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("idx_magic_link_rate_limits_updated_at").on(table.updatedAt),
+  ]
+);
+
 export const opportunities = pgTable(
   "opportunities",
   {
@@ -166,6 +184,8 @@ export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Account = typeof accounts.$inferSelect;
 export type NewAccount = typeof accounts.$inferInsert;
+export type MagicLinkRateLimit = typeof magicLinkRateLimits.$inferSelect;
+export type NewMagicLinkRateLimit = typeof magicLinkRateLimits.$inferInsert;
 export type Opportunity = typeof opportunities.$inferSelect;
 export type NewOpportunity = typeof opportunities.$inferInsert;
 export type StatusHistory = typeof statusHistory.$inferSelect;

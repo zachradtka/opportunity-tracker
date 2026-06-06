@@ -25,6 +25,8 @@ const errorMessages: Record<string, string> = {
     "That sign-in link has expired or already been used. Request a new one below.",
   Configuration:
     "Sign-in is misconfigured. Contact the site administrator.",
+  RateLimited:
+    "Too many sign-in links were requested. Wait a few minutes before trying again.",
 };
 
 function getErrorMessage(code: string | undefined): string | null {
